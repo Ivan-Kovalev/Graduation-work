@@ -1,5 +1,8 @@
 package ru.skypro.homework.dto;
 
+import lombok.Data;
+
+@Data
 public class ExtendedAd {
     private Integer pk;
     private String authorFirstName;
