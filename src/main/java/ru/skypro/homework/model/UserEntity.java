@@ -3,10 +3,8 @@ package ru.skypro.homework.model;
 import lombok.*;
 import ru.skypro.homework.dto.Role;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +25,36 @@ public class UserEntity {
         this.image = image;
     }
 
+    public UserEntity(String email, String password, String firstName, String lastName, String phone, Role role) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.role = role;
+    }
+
+    public UserEntity(Integer id, String email, String firstName, String lastName, String phone, Role role, String image) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.role = role;
+        this.image = image;
+    }
+
+    public UserEntity(String firstName, String lastName, String phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
+
+    public UserEntity(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -38,5 +66,11 @@ public class UserEntity {
     private String phone;
     private Role role;
     private String image;
+
+    @OneToMany(mappedBy = "author")
+    private List<AdEntity> ads;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
+    private List<CommentEntity> comments;
 
 }

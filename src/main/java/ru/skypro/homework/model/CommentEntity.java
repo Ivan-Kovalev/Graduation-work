@@ -2,10 +2,7 @@ package ru.skypro.homework.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,13 +15,18 @@ public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private Integer author;
+    private Integer pk;
     private String authorImage;
     private String authorFirstName;
     private Integer createdAt;
-    private Integer pk;
     private String text;
+
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private AdEntity ad;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity author;
 
 }
