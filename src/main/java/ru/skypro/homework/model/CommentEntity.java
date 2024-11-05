@@ -13,6 +13,19 @@ import javax.persistence.*;
 @Entity
 public class CommentEntity {
 
+    public CommentEntity(UserEntity author, String authorImage, String authorFirstName, Integer createdAt, Integer pk, String text) {
+        this.author = author;
+        this.authorImage = authorImage;
+        this.authorFirstName = authorFirstName;
+        this.createdAt = createdAt;
+        this.pk = pk;
+        this.text = text;
+    }
+
+    public CommentEntity(String text) {
+        this.text = text;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
