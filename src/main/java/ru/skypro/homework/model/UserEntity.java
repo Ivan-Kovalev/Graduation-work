@@ -44,6 +44,13 @@ public class UserEntity {
         this.image = image;
     }
 
+    public UserEntity(String firstName, String lastName, String email, String phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public UserEntity(String firstName, String lastName, String phone) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -53,6 +60,10 @@ public class UserEntity {
     public UserEntity(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public UserEntity(Integer id) {
+        this.id = id;
     }
 
     @Id
