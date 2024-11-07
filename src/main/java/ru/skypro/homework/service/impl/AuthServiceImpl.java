@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UserIsAlreadyExistException("User is already exist");
         }
         else {
-            userRepository.save(new UserEntity(register.getUsername(), encoder.encode(register.getPassword()), register.getFirstName(), register.getLastName(), register.getPhone(), register.getRole(), null));
+//            userRepository.save(new UserEntity(register.getUsername(), encoder.encode(register.getPassword()), register.getFirstName(), register.getLastName(), register.getPhone(), register.getRole()));
         }
         return false;
     }

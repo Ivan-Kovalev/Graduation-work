@@ -6,7 +6,6 @@ import ru.skypro.homework.dto.Role;
 import javax.persistence.*;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -14,57 +13,6 @@ import java.util.List;
 @ToString
 @Entity
 public class UserEntity {
-
-    public UserEntity(String email, String password, String firstName, String lastName, String phone, Role role, String image) {
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.role = role;
-        this.image = image;
-    }
-
-    public UserEntity(String email, String password, String firstName, String lastName, String phone, Role role) {
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.role = role;
-    }
-
-    public UserEntity(Integer id, String email, String firstName, String lastName, String phone, Role role, String image) {
-        this.id = id;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.role = role;
-        this.image = image;
-    }
-
-    public UserEntity(String firstName, String lastName, String email, String phone) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phone = phone;
-    }
-
-    public UserEntity(String firstName, String lastName, String phone) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-    }
-
-    public UserEntity(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public UserEntity(Integer id) {
-        this.id = id;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,4 +32,15 @@ public class UserEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<CommentEntity> comments;
 
+    public UserEntity(String email, String password, String firstName, String lastName, String phone, Role role, String image, List<AdEntity> ads, List<CommentEntity> comments) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.role = role;
+        this.image = image;
+        this.ads = ads;
+        this.comments = comments;
+    }
 }

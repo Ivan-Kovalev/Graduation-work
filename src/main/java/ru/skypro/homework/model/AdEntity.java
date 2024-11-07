@@ -6,7 +6,6 @@ import ru.skypro.homework.dto.User;
 import javax.persistence.*;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -14,29 +13,6 @@ import java.util.List;
 @ToString
 @Entity
 public class AdEntity {
-
-    public AdEntity(Integer pk, String image, Integer price, String title, String description, UserEntity author) {
-        this.pk = pk;
-        this.image = image;
-        this.price = price;
-        this.title = title;
-        this.description = description;
-        this.author = author;
-    }
-
-    public AdEntity(Integer pk, String image, String title, Integer price, UserEntity author) {
-        this.pk = pk;
-        this.image = image;
-        this.title = title;
-        this.price = price;
-        this.author = author;
-    }
-
-    public AdEntity(String title, Integer price, String description) {
-        this.title = title;
-        this.price = price;
-        this.description = description;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,4 +28,13 @@ public class AdEntity {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private UserEntity author;
+
+    public AdEntity(UserEntity author, List<CommentEntity> comments, String description, String title, Integer price, String image) {
+        this.author = author;
+        this.comments = comments;
+        this.description = description;
+        this.title = title;
+        this.price = price;
+        this.image = image;
+    }
 }
