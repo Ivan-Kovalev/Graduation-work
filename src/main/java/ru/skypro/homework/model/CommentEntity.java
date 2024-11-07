@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -12,19 +11,6 @@ import javax.persistence.*;
 @ToString
 @Entity
 public class CommentEntity {
-
-    public CommentEntity(UserEntity author, String authorImage, String authorFirstName, Integer createdAt, Integer pk, String text) {
-        this.author = author;
-        this.authorImage = authorImage;
-        this.authorFirstName = authorFirstName;
-        this.createdAt = createdAt;
-        this.pk = pk;
-        this.text = text;
-    }
-
-    public CommentEntity(String text) {
-        this.text = text;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +28,12 @@ public class CommentEntity {
     @JoinColumn(name = "user_id")
     private UserEntity author;
 
+    public CommentEntity(String authorImage, String authorFirstName, Integer createdAt, String text, AdEntity ad, UserEntity author) {
+        this.authorImage = authorImage;
+        this.authorFirstName = authorFirstName;
+        this.createdAt = createdAt;
+        this.text = text;
+        this.ad = ad;
+        this.author = author;
+    }
 }
