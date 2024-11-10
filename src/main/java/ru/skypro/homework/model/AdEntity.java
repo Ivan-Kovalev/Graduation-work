@@ -14,6 +14,12 @@ import java.util.List;
 @Entity
 public class AdEntity {
 
+//    private Integer author;
+//    private String image;
+//    private Integer pk;
+//    private Integer price;
+//    private String title;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
