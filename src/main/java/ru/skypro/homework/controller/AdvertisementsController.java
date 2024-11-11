@@ -3,10 +3,21 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.Ad;
+import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
+import ru.skypro.homework.dto.ExtendedAd;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -16,23 +27,25 @@ import ru.skypro.homework.dto.CreateOrUpdateAd;
 public class AdvertisementsController {
 
     @GetMapping
-    public ResponseEntity<HttpStatus> getAllAdv() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Ads> getAllAdv() {
+        Ad[] advertisements = new Ad[1];
+        advertisements[0] = new Ad(0, "", 10, 10000, "TestTitle");
+        return new ResponseEntity<>(new Ads(advertisements.length, advertisements), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addAdv(@RequestBody MultipartFile file,
-                                             @RequestBody CreateOrUpdateAd createOrUpdateAd) {
-        if (file.isEmpty()) {
+    public ResponseEntity<Ad> addAdv(@RequestBody MultipartFile file,
+                                     @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(new Ad(0, "", 10, 10000, "TestTitle"), HttpStatus.CREATED);
         }
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<HttpStatus> getAdvInfo(@PathVariable Integer id) {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<ExtendedAd> getAdvInfo(@PathVariable Integer id) {
+        return new ResponseEntity<>(new ExtendedAd(1, "Firstname", "Lastname", "Description", "email@email.ru", "", "88005353535", 10000, "TestTitle"), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -41,24 +54,29 @@ public class AdvertisementsController {
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<HttpStatus> patchAdvInfo(@PathVariable Integer id) {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Ad> patchAdvInfo(@PathVariable Integer id) {
+        return new ResponseEntity<>(new Ad(0, "", 10, 10000, "TestTitle"), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/me")
-    public ResponseEntity<HttpStatus> getAdvCurrentUser() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Ads> getAdvCurrentUser() {
+        Ad[] advertisements = new Ad[1];
+        advertisements[0] = new Ad(0, "", 10, 10000, "TestTitle");
+        return new ResponseEntity<>(new Ads(advertisements.length, advertisements), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{id}/image")
-    public ResponseEntity<HttpStatus> patchAdvImage(@PathVariable Integer id, @RequestBody MultipartFile file) {
-        if (file.isEmpty()) {
+    public ResponseEntity<byte[]> patchAdvImage(@PathVariable Integer id,
+                                                @RequestParam MultipartFile file,
+                                                @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if (file.getSize() > 50_000) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        byte[] updatedImageContent = file.getBytes();
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(updatedImageContent);
     }
 
 }
