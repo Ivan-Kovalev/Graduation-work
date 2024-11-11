@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.exception.UserIsAlreadyExistException;
+import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.model.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
@@ -15,15 +17,12 @@ import ru.skypro.homework.service.AuthService;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.encoder = passwordEncoder;
-    }
+    private final UserMapper userMapper;
 
     @Override
     public boolean login(String userName, String password) {
@@ -38,9 +37,10 @@ public class AuthServiceImpl implements AuthService {
             throw new UserIsAlreadyExistException("User is already exist");
         }
         else {
-//            userRepository.save(new UserEntity(register.getUsername(), encoder.encode(register.getPassword()), register.getFirstName(), register.getLastName(), register.getPhone(), register.getRole()));
+            register.setPassword(encoder.encode(register.getPassword()));
+            userRepository.save(userMapper.mapRegisterToUserEntity(register));
+            return true;
         }
-        return false;
     }
 
 }
