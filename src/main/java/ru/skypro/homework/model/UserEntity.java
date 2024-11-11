@@ -32,15 +32,4 @@ public class UserEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<CommentEntity> comments;
 
-    public UserEntity(String email, String password, String firstName, String lastName, String phone, Role role, String image, List<AdEntity> ads, List<CommentEntity> comments) {
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.role = role;
-        this.image = image;
-        this.ads = ads;
-        this.comments = comments;
-    }
 }
