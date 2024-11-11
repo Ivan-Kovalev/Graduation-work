@@ -16,16 +16,13 @@ import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.service.AdvertisementsService;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/ads")
-public class AdvertisementsController {
+public class AdController {
 
     private final AdvertisementsService advertisementsService;
 
