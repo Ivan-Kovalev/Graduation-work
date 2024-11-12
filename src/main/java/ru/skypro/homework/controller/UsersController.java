@@ -11,8 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
-
-import java.nio.file.Paths;
+import ru.skypro.homework.service.UserService;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -21,21 +20,25 @@ import java.nio.file.Paths;
 @RequestMapping(path = "/users")
 public class UsersController {
 
+    private final UserService service;
+
     @PostMapping(path = "/set_password")
-    public ResponseEntity<HttpStatus> setPassword(@RequestBody NewPassword newPassword) {
+    public ResponseEntity<HttpStatus> setPassword(@RequestBody NewPassword newPassword,
+                                                  @AuthenticationPrincipal UserDetails userDetails) {
         if (!newPassword.getNewPassword().equals(newPassword.getCurrentPassword())) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         if (newPassword.getNewPassword().length() > 16 || newPassword.getNewPassword().length() < 8) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
+            service.setPassword(newPassword, userDetails);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
     @GetMapping(path = "/me")
-    public ResponseEntity<User> getCurrentUserInfo() {
-        return new ResponseEntity<>(new User(0, "test@mail.ru", "firstname", "lastname", "89000000000", "USER", ""), HttpStatus.OK);
+    public ResponseEntity<User> getCurrentUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        return new ResponseEntity<>(service.getCurrentUserInfo(userDetails), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/me")
@@ -44,7 +47,7 @@ public class UsersController {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<>(new UpdateUser("firsname", "lastname", "88005353535"), HttpStatus.OK);
+            return new ResponseEntity<>(service.patchCurrentUserInfo(updateUser, userDetails), HttpStatus.OK);
         }
     }
 
@@ -54,6 +57,7 @@ public class UsersController {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
+            service.patchCurrentUserImage(file, userDetails);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }

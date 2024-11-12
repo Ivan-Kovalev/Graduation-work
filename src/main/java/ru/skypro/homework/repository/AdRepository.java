@@ -9,4 +9,6 @@ public interface AdRepository extends JpaRepository<AdEntity, Integer> {
 
     List<AdEntity> findAdEntitiesByAuthor(Integer authorId);
 
+    AdEntity findAdEntityByPk(Integer pk);
+
 }
