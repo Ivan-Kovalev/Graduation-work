@@ -22,7 +22,7 @@ public interface CommentMapper {
 
     CommentEntity mapCreateOrUpdateCommentToCommentEntity(CreateOrUpdateComment createOrUpdateComment);
 
-    CreateOrUpdateComment mapCreateOrUpdateCommentToCommentEntity(CommentEntity commentEntity);
+    CreateOrUpdateComment mapCommentEntityToCreateOrUpdateComment(CommentEntity commentEntity);
 
     @Named("mapIntegerToUserEntity")
     default UserEntity map(Integer value) {
