@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
@@ -33,24 +34,24 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment addCommentAdv(Integer id, CreateOrUpdateComment createOrUpdateComment, UserDetails userDetails) {
-        UserEntity user = userRepository.findUserEntitiesByEmail(userDetails.getUsername());
+    public Comment addCommentAdv(Integer id, CreateOrUpdateComment createOrUpdateComment, String username) {
+        UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
         AdEntity ad = adRepository.findAdEntityByPk(id);
         CommentEntity comment = new CommentEntity(user.getImage(), user.getFirstName(), id, createOrUpdateComment.getText(), ad, user);
         return mapper.mapCommentEntityToComment(commentRepository.save(comment));
     }
 
     @Override
-    public void deleteCommentAdv(Integer adId, Integer commentId, UserDetails userDetails) {
+    public void deleteCommentAdv(Integer adId, Integer commentId, String username) {
         commentRepository.deleteById(commentId);
     }
 
     @Override
-    public Comment patchCommentAdv(Integer adId, Integer commentId, CreateOrUpdateComment createOrUpdateComment, UserDetails userDetails) {
-        UserEntity user = userRepository.findUserEntitiesByEmail(userDetails.getUsername());
+    public Comment patchCommentAdv(Integer adId, Integer commentId, CreateOrUpdateComment createOrUpdateComment, String username) {
+        UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
         AdEntity ad = adRepository.findAdEntityByPk(adId);
         CommentEntity comment = new CommentEntity(user.getImage(), user.getFirstName(), commentId, createOrUpdateComment.getText(), ad, user);
-        commentRepository.updateCommentEntityByPk(commentId, comment);
+        commentRepository.save(comment);
         return mapper.mapCommentEntityToComment(comment);
     }
 }
