@@ -13,7 +13,8 @@ import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
-import ru.skypro.homework.service.AdvertisementsService;
+import ru.skypro.homework.mappers.UserMapper;
+import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
 
@@ -24,11 +25,12 @@ import java.io.IOException;
 @RequestMapping(path = "/ads")
 public class AdController {
 
-    private final AdvertisementsService advertisementsService;
+    private final AdService adService;
+    private final UserMapper userMapper;
 
     @GetMapping
     public ResponseEntity<Ads> getAllAdv() {
-        Ads advertisements = advertisementsService.getAllAdv();
+        Ads advertisements = adService.getAllAdv();
         return new ResponseEntity<>(advertisements, HttpStatus.OK);
     }
 
@@ -39,29 +41,29 @@ public class AdController {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<>(advertisementsService.addAdv(file, createOrUpdateAd, userDetails.getUsername()), HttpStatus.CREATED);
+            return new ResponseEntity<>(adService.addAdv(file, createOrUpdateAd, userDetails.getUsername()), HttpStatus.CREATED);
         }
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<ExtendedAd> getAdvInfo(@PathVariable Integer id) {
-        return new ResponseEntity<>(advertisementsService.getAdvInfo(id), HttpStatus.OK);
+        return new ResponseEntity<>(adService.getAdvInfo(id), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<HttpStatus> deleteAdv(@PathVariable Integer id) {
-        advertisementsService.deleteAdv(id);
+    public ResponseEntity<HttpStatus> deleteAdv(@PathVariable Integer id, @AuthenticationPrincipal UserDetails userDetails) {
+        adService.deleteAdv(id, userDetails.getUsername());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<Ad> patchAdvInfo(@PathVariable Integer id, @RequestBody CreateOrUpdateAd createOrUpdateAd) {
-        return new ResponseEntity<>(advertisementsService.patchAdvInfo(id, createOrUpdateAd), HttpStatus.CREATED);
+    public ResponseEntity<Ad> patchAdvInfo(@PathVariable Integer id, @RequestBody CreateOrUpdateAd createOrUpdateAd, @AuthenticationPrincipal UserDetails userDetails) {
+        return new ResponseEntity<>(adService.patchAdvInfo(id, createOrUpdateAd, userDetails.getUsername()), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/me")
     public ResponseEntity<Ads> getAdvCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return new ResponseEntity<>(advertisementsService.getAdvCurrentUser(userDetails.getUsername()), HttpStatus.OK);
+        return new ResponseEntity<>(adService.getAdvCurrentUser(userDetails.getUsername()), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{id}/image")
@@ -74,7 +76,7 @@ public class AdController {
         if (file.getSize() > 50_000) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(advertisementsService.patchAdvImage(id, file, userDetails.getUsername()));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(adService.patchAdvImage(id, file, userDetails.getUsername()));
     }
 
 }

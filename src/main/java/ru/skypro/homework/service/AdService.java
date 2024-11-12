@@ -8,7 +8,7 @@ import ru.skypro.homework.dto.ExtendedAd;
 
 import java.io.IOException;
 
-public interface AdvertisementsService {
+public interface AdService {
 
     Ads getAllAdv();
 
@@ -16,9 +16,9 @@ public interface AdvertisementsService {
 
     ExtendedAd getAdvInfo(Integer id);
 
-    void deleteAdv(Integer id);
+    void deleteAdv(Integer id, String username);
 
-    Ad patchAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd);
+    Ad patchAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd, String username);
 
     Ads getAdvCurrentUser(String username);
 

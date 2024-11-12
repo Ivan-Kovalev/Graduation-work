@@ -31,14 +31,14 @@ public class CommentsController {
     public ResponseEntity<Comment> addCommentAdv(@PathVariable Integer id,
                                                  @RequestBody CreateOrUpdateComment createOrUpdateComment,
                                                  @AuthenticationPrincipal UserDetails userDetails) {
-        return new ResponseEntity<>(service.addCommentAdv(id, createOrUpdateComment, userDetails), HttpStatus.OK);
+        return new ResponseEntity<>(service.addCommentAdv(id, createOrUpdateComment, userDetails.getUsername()), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{adId}/comments/{commentId}")
     public ResponseEntity<HttpStatus> deleteCommentAdv(@PathVariable Integer adId,
                                                        @PathVariable Integer commentId,
                                                        @AuthenticationPrincipal UserDetails userDetails) {
-        service.deleteCommentAdv(adId, commentId, userDetails);
+        service.deleteCommentAdv(adId, commentId, userDetails.getUsername());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -47,7 +47,7 @@ public class CommentsController {
                                                    @PathVariable Integer commentId,
                                                    @RequestBody CreateOrUpdateComment createOrUpdateComment,
                                                    @AuthenticationPrincipal UserDetails userDetails) {
-        service.patchCommentAdv(adId, commentId, createOrUpdateComment, userDetails);
+        service.patchCommentAdv(adId, commentId, createOrUpdateComment, userDetails.getUsername());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,7 +1,6 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +12,7 @@ import ru.skypro.homework.model.AdEntity;
 import ru.skypro.homework.model.UserEntity;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.AdvertisementsService;
+import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.util.FileService;
 
 import java.io.IOException;
@@ -22,8 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class AdvertisementsServiceImpl implements AdvertisementsService {
+public class AdServiceImpl implements AdService {
 
     private final AdRepository adRepository;
     private final UserRepository userRepository;
@@ -64,13 +62,26 @@ public class AdvertisementsServiceImpl implements AdvertisementsService {
     }
 
     @Override
-    public void deleteAdv(Integer id) {
+    public void deleteAdv(Integer id, String username) {
+        AdEntity adEntity = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException("Ошибка! Реклама с данным id не найдена"));
+        boolean isAuthor = username.equals(adEntity.getAuthor().getEmail());
+        boolean isAdmin = adEntity.getAuthor().getRole().equals(Role.ADMIN);
+        if (!isAuthor && !isAdmin) {
+            throw new ForbiddenActionException("Пользователь " + username + " не имеет прав удалять чужие объявления.");
+        }
         adRepository.deleteById(id);
     }
 
     @Override
-    public Ad patchAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd) {
-        AdEntity adEntity = adMapper.mapCreateOrUpdateAdToEntity(createOrUpdateAd);
+    public Ad patchAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd, String username) {
+        AdEntity adEntity = adRepository.findById(id)
+                .orElseThrow(() -> new AdNotFoundException("Реклама с id " + id + " не найдена"));
+        boolean isAuthor = username.equals(adEntity.getAuthor().getEmail());
+        boolean isAdmin = adEntity.getAuthor().getRole().equals(Role.ADMIN);
+        if (!isAuthor && !isAdmin) {
+            throw new ForbiddenActionException("Пользователь " + username + " не имеет прав менять чужие объявления.");
+        }
+        adEntity = adMapper.mapCreateOrUpdateAdToEntity(createOrUpdateAd);
         adEntity.setPk(id);
         return adMapper.mapAdEntityToAd(adRepository.save(adEntity));
     }

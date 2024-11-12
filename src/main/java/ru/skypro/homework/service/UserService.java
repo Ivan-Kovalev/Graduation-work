@@ -7,11 +7,11 @@ import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
 
 public interface UserService {
-    void setPassword(NewPassword newPassword, UserDetails userDetails);
+    void setPassword(NewPassword newPassword, String username);
 
-    User getCurrentUserInfo(UserDetails userDetails);
+    User getCurrentUserInfo(String username);
 
-    UpdateUser patchCurrentUserInfo(UpdateUser updateUser, UserDetails userDetails);
+    UpdateUser patchCurrentUserInfo(UpdateUser updateUser, String username);
 
-    void patchCurrentUserImage(MultipartFile file, UserDetails userDetails);
+    void patchCurrentUserImage(MultipartFile file, String username);
 }
