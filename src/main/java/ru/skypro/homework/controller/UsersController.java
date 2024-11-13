@@ -51,7 +51,7 @@ public class UsersController {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<>(userService.patchCurrentUserInfo(updateUser, userDetails.getUsername()), HttpStatus.OK);
+            return new ResponseEntity<>(userService.updateCurrentUserInfo(updateUser, userDetails.getUsername()), HttpStatus.OK);
         }
     }
 
@@ -61,7 +61,7 @@ public class UsersController {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
-            userService.patchCurrentUserImage(file, userDetails.getUsername());
+            userService.updateCurrentUserImage(file, userDetails.getUsername());
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }

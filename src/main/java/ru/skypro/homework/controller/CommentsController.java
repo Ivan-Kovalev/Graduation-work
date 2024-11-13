@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
-import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.service.CommentService;
 
@@ -47,7 +46,7 @@ public class CommentsController {
                                                    @PathVariable Integer commentId,
                                                    @RequestBody CreateOrUpdateComment createOrUpdateComment,
                                                    @AuthenticationPrincipal UserDetails userDetails) {
-        service.patchCommentAdv(adId, commentId, createOrUpdateComment, userDetails.getUsername());
+        service.updateCommentAdv(adId, commentId, createOrUpdateComment, userDetails.getUsername());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

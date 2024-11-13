@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.exception.UserIsAlreadyExistException;
@@ -10,7 +11,7 @@ import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class AuthServiceImpl implements AuthService {

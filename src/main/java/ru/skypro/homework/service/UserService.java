@@ -1,6 +1,5 @@
 package ru.skypro.homework.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
@@ -11,7 +10,7 @@ public interface UserService {
 
     User getCurrentUserInfo(String username);
 
-    UpdateUser patchCurrentUserInfo(UpdateUser updateUser, String username);
+    UpdateUser updateCurrentUserInfo(UpdateUser updateUser, String username);
 
-    void patchCurrentUserImage(MultipartFile file, String username);
+    void updateCurrentUserImage(MultipartFile file, String username);
 }

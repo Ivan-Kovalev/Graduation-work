@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
@@ -17,7 +18,7 @@ import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.CommentService;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class CommentServiceImpl implements CommentService {
@@ -47,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment patchCommentAdv(Integer adId, Integer commentId, CreateOrUpdateComment createOrUpdateComment, String username) {
+    public Comment updateCommentAdv(Integer adId, Integer commentId, CreateOrUpdateComment createOrUpdateComment, String username) {
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
         AdEntity ad = adRepository.findAdEntityByPk(adId);
         CommentEntity comment = new CommentEntity(user.getImage(), user.getFirstName(), commentId, createOrUpdateComment.getText(), ad, user);
