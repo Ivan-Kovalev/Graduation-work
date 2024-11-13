@@ -2,6 +2,7 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AdServiceImpl implements AdService {
 
@@ -73,7 +74,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public Ad patchAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd, String username) {
+    public Ad updateAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd, String username) {
         AdEntity adEntity = adRepository.findById(id)
                 .orElseThrow(() -> new AdNotFoundException("Реклама с id " + id + " не найдена"));
         boolean isAuthor = username.equals(adEntity.getAuthor().getEmail());
@@ -97,7 +98,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public byte[] patchAdvImage(Integer id, MultipartFile file, String username) throws IOException {
+    public byte[] updateAdvImage(Integer id, MultipartFile file, String username) throws IOException {
         AdEntity adEntity = adRepository.findById(id)
                 .orElseThrow(() -> new AdNotFoundException("Реклама с id " + id + " не найдена"));
         boolean isAuthor = username.equals(adEntity.getAuthor().getEmail());

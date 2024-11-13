@@ -58,7 +58,7 @@ public class AdController {
 
     @PatchMapping(path = "/{id}")
     public ResponseEntity<Ad> patchAdvInfo(@PathVariable Integer id, @RequestBody CreateOrUpdateAd createOrUpdateAd, @AuthenticationPrincipal UserDetails userDetails) {
-        return new ResponseEntity<>(adService.patchAdvInfo(id, createOrUpdateAd, userDetails.getUsername()), HttpStatus.CREATED);
+        return new ResponseEntity<>(adService.updateAdvInfo(id, createOrUpdateAd, userDetails.getUsername()), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/me")
@@ -76,7 +76,7 @@ public class AdController {
         if (file.getSize() > 50_000) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(adService.patchAdvImage(id, file, userDetails.getUsername()));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(adService.updateAdvImage(id, file, userDetails.getUsername()));
     }
 
 }

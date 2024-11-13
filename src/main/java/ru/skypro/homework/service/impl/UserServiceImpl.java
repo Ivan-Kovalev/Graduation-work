@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
@@ -16,7 +17,9 @@ import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 import ru.skypro.homework.util.FileService;
 
-@Service
+import javax.transaction.Transactional;
+
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -25,12 +28,14 @@ public class UserServiceImpl implements UserService {
     private final FileService fileService;
     private UserMapper mapper;
 
+    @Transactional
     @Override
     public void setPassword(NewPassword newPassword, String username) {
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
         if (user.getPassword().equals(newPassword.getCurrentPassword())) {
             user.setPassword(newPassword.getNewPassword());
             userRepository.save(user);
+            return;
         }
         throw new BadPasswordException("Ошибка! Пароль не соответствует установленному");
     }
@@ -41,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UpdateUser patchCurrentUserInfo(UpdateUser updateUser, String username) {
+    public UpdateUser updateCurrentUserInfo(UpdateUser updateUser, String username) {
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
         user.setFirstName(updateUser.getFirstName());
         user.setLastName(updateUser.getLastName());
@@ -51,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void patchCurrentUserImage(MultipartFile file, String username) {
+    public void updateCurrentUserImage(MultipartFile file, String username) {
         String filePath = fileService.saveFile(file);
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
         user.setImage(filePath);

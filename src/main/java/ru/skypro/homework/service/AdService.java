@@ -18,9 +18,9 @@ public interface AdService {
 
     void deleteAdv(Integer id, String username);
 
-    Ad patchAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd, String username);
+    Ad updateAdvInfo(Integer id, CreateOrUpdateAd createOrUpdateAd, String username);
 
     Ads getAdvCurrentUser(String username);
 
-    byte[] patchAdvImage(Integer id, MultipartFile file, String username) throws IOException;
+    byte[] updateAdvImage(Integer id, MultipartFile file, String username) throws IOException;
 }
