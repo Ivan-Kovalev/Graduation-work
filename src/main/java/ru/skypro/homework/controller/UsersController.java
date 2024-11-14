@@ -27,14 +27,14 @@ public class UsersController {
     @PostMapping(path = "/set_password")
     public ResponseEntity<HttpStatus> setPassword(@RequestBody NewPassword newPassword,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
-        if (!newPassword.getNewPassword().equals(newPassword.getCurrentPassword())) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        if (newPassword.getNewPassword().length() > 16 || newPassword.getNewPassword().length() < 8) {
+        if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        newPassword.setNewPassword(passwordEncoder.encode(newPassword.getNewPassword()));
+        newPassword.setCurrentPassword(passwordEncoder.encode(newPassword.getCurrentPassword()));
+        if (!newPassword.getCurrentPassword().equals(userDetails.getPassword())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
-            newPassword.setNewPassword(passwordEncoder.encode(newPassword.getNewPassword()));
-            newPassword.setCurrentPassword(passwordEncoder.encode(newPassword.getCurrentPassword()));
             userService.setPassword(newPassword, userDetails.getUsername());
             return new ResponseEntity<>(HttpStatus.OK);
         }
