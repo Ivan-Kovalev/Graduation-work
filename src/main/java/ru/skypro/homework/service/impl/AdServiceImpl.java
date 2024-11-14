@@ -3,7 +3,6 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.AdNotFoundException;
@@ -90,7 +89,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public Ads getAdvCurrentUser(String username) {
         UserEntity author = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
-        List<Ad> adsList = adRepository.findAdEntitiesByAuthor(author.getId()).stream()
+        List<Ad> adsList = adRepository.findAdEntitiesByAuthorId(author.getId()).stream()
                 .map(this::mapAdEntityToAd)
                 .collect(Collectors.toList());
 

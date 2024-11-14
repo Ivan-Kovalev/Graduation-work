@@ -2,15 +2,12 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
-import ru.skypro.homework.exception.BadPasswordException;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.model.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
@@ -32,12 +29,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setPassword(NewPassword newPassword, String username) {
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
-        if (user.getPassword().equals(newPassword.getCurrentPassword())) {
-            user.setPassword(newPassword.getNewPassword());
-            userRepository.save(user);
-            return;
-        }
-        throw new BadPasswordException("Ошибка! Пароль не соответствует установленному");
+        user.setPassword(newPassword.getNewPassword());
+        userRepository.save(user);
     }
 
     @Override

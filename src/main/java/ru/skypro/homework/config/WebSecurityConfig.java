@@ -64,8 +64,6 @@ public class WebSecurityConfig {
                                 authorization
                                         .mvcMatchers(AUTH_WHITELIST)
                                         .permitAll()
-                                        .mvcMatchers(HttpMethod.GET, "ВСТАВЬ")
-                                        .hasRole(Role.ADMIN.name())
                                         .mvcMatchers("/ads/**", "/users/**")
                                         .authenticated()
                                         .anyRequest().denyAll())
