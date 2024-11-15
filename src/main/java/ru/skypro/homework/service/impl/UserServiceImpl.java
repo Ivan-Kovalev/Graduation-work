@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
@@ -16,7 +17,7 @@ import ru.skypro.homework.util.FileService;
 
 import javax.transaction.Transactional;
 
-@Component
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {

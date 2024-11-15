@@ -1,6 +1,7 @@
 package ru.skypro.homework.util.imlp;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.util.FileService;
@@ -10,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Service
+@Component
 public class FileServiceImpl implements FileService {
 
     @Value("${image.upload.directory}")
