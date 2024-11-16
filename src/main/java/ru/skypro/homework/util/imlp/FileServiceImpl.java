@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.exception.file.FileSavingException;
+import ru.skypro.homework.exception.file.FileUpdatingException;
 import ru.skypro.homework.util.FileService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Component
 public class FileServiceImpl implements FileService {
@@ -22,11 +25,11 @@ public class FileServiceImpl implements FileService {
 
         try {
             Files.createDirectories(directory);
-            Path filePath = directory.resolve(System.currentTimeMillis() + "-" + file.getOriginalFilename());
+            Path filePath = directory.resolve(UUID.randomUUID() + "-" + file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath);
             return filePath.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка при сохранении файла");
+            throw new FileSavingException("Ошибка при сохранении файла");
         }
     }
 
@@ -37,7 +40,7 @@ public class FileServiceImpl implements FileService {
             try {
                 Files.delete(oldFile);
             } catch (IOException e) {
-                throw new RuntimeException("Ошибка при удалении файла");
+                throw new FileUpdatingException("Ошибка при удалении файла");
             }
         }
 

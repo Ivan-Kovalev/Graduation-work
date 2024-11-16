@@ -46,8 +46,8 @@ public class UsersController {
     }
 
     @PatchMapping(path = "/me")
-    public ResponseEntity<UpdateUser> patchCurrentUserInfo(@RequestBody UpdateUser updateUser,
-                                                           @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<UpdateUser> updateCurrentUserInfo(@RequestBody UpdateUser updateUser,
+                                                            @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
@@ -56,8 +56,8 @@ public class UsersController {
     }
 
     @PatchMapping(path = "/me/image")
-    public ResponseEntity<HttpStatus> patchCurrentUserImage(@RequestBody MultipartFile file,
-                                                            @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<HttpStatus> updateCurrentUserImage(@RequestBody MultipartFile file,
+                                                             @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } else {
