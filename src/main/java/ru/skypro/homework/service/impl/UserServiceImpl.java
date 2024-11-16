@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final FileService fileService;
-    private UserMapper mapper;
+    private final UserMapper mapper;
 
     @Transactional
     @Override
