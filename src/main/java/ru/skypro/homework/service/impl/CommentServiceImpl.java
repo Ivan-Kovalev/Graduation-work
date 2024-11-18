@@ -33,18 +33,17 @@ public class CommentServiceImpl implements CommentService {
     private final AdRepository adRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private CommentMapper commentMapper;
-    private AdMapper adMapper;
+    private final CommentMapper commentMapper;
+    private final AdMapper adMapper;
 
     @Override
     public Comments getCommentsAdv(Integer id) {
         AdEntity adEntity = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException("Ошибка! Реклама с данным id не найдена"));
-        List<Comment> comments = adEntity.getComments().stream().map(this::mapCommentEntityToComment).collect(Collectors.toList());
+        List<Comment> comments = adEntity.getComments()
+                .stream()
+                .map(commentMapper::mapCommentEntityToComment)
+                .collect(Collectors.toList());
         return new Comments(comments.size(), comments.toArray(new Comment[0]));
-    }
-
-    private Comment mapCommentEntityToComment(CommentEntity commentEntity) {
-        return commentMapper.mapCommentEntityToComment(commentEntity);
     }
 
     @Override

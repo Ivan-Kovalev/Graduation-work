@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateCurrentUserImage(MultipartFile file, String username) {
-        String filePath = fileService.saveFile(file);
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
+        String filePath = fileService.updateFile(user.getImage(), file);
         user.setImage(filePath);
         userRepository.save(user);
     }

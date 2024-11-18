@@ -6,10 +6,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Comment {
-    private Integer author;
+    private Integer pk;
     private String authorImage;
     private String authorFirstName;
     private Integer createdAt;
-    private Integer pk;
     private String text;
+
+    private Integer author;
 }

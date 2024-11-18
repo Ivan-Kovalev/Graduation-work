@@ -14,10 +14,10 @@ public interface CommentMapper {
 
     CommentMapper INSTANCE = Mappers.getMapper( CommentMapper.class );
 
-    @Mapping(target = "author", expression = "java(commentEntity.getAuthor().getId())")
-    Comment mapCommentEntityToComment (CommentEntity commentEntity);
+    @Mapping(target = "author", source = "author.id")
+    Comment mapCommentEntityToComment(CommentEntity commentEntity);
 
-    @Mapping(source = "author", target = "author", qualifiedByName = "mapIntegerToUserEntity")
+    @Mapping(source = "author", target = "author.id")
     CommentEntity mapCommentToCommentEntity(Comment comment);
 
     CommentEntity mapCreateOrUpdateCommentToCommentEntity(CreateOrUpdateComment createOrUpdateComment);
