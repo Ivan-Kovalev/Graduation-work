@@ -34,7 +34,7 @@ public class WebSecurityConfig {
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/register"
+            "/register",
     };
 
     public WebSecurityConfig(UserRepository userRepository) {
@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                                 authorization
                                         .mvcMatchers(AUTH_WHITELIST)
                                         .permitAll()
-                                        .mvcMatchers("/ads/**", "/users/**")
+                                        .mvcMatchers("/ads/**", "/users/**", "/images/ad/preview/**")
                                         .authenticated()
                                         .anyRequest().denyAll())
                 .cors()

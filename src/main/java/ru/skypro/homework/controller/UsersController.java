@@ -30,11 +30,10 @@ public class UsersController {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        newPassword.setNewPassword(passwordEncoder.encode(newPassword.getNewPassword()));
-        newPassword.setCurrentPassword(passwordEncoder.encode(newPassword.getCurrentPassword()));
-        if (!newPassword.getCurrentPassword().equals(userDetails.getPassword())) {
+        if (!passwordEncoder.matches(newPassword.getCurrentPassword(), userDetails.getPassword())) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
+            newPassword.setNewPassword(passwordEncoder.encode(newPassword.getNewPassword()));
             userService.setPassword(newPassword, userDetails.getUsername());
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -56,7 +55,7 @@ public class UsersController {
     }
 
     @PatchMapping(path = "/me/image")
-    public ResponseEntity<HttpStatus> updateCurrentUserImage(@RequestBody MultipartFile file,
+    public ResponseEntity<HttpStatus> updateCurrentUserImage(@RequestParam("image") MultipartFile file,
                                                              @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

@@ -1,14 +1,17 @@
 package ru.skypro.homework.util.imlp;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.exception.file.FileSavingException;
 import ru.skypro.homework.exception.file.FileUpdatingException;
 import ru.skypro.homework.util.FileService;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,14 +30,14 @@ public class FileServiceImpl implements FileService {
             Files.createDirectories(directory);
             Path filePath = directory.resolve(UUID.randomUUID() + "-" + file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath);
-            return filePath.toString();
+            return uploadDirectory.substring(18) + "/" + filePath.getFileName();
         } catch (IOException e) {
             throw new FileSavingException("Ошибка при сохранении файла");
         }
     }
 
-    public String updateFile(String oldFilePath, MultipartFile newFile) {
-        Path oldFile = Paths.get(oldFilePath);
+    public String updateFile(String fileName, MultipartFile newFile) {
+        Path oldFile = Paths.get(fileName);
 
         if (Files.exists(oldFile)) {
             try {
@@ -45,6 +48,16 @@ public class FileServiceImpl implements FileService {
         }
 
         return saveFile(newFile);
+    }
+
+    public Resource getFile(String fileName) throws FileNotFoundException {
+        Path filePath = Paths.get(uploadDirectory, fileName);
+
+        Resource resource = new FileSystemResource(filePath);
+        if (!resource.exists()) {
+            throw new FileNotFoundException("Файл не найден");
+        }
+        return resource;
     }
 
 }

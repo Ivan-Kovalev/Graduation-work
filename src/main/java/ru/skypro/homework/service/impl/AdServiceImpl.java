@@ -53,6 +53,7 @@ public class AdServiceImpl implements AdService {
                 .description(createOrUpdateAd.getDescription())
                 .author(user)
                 .build();
+        adRepository.save(adEntity);
         return adMapper.mapAdEntityToAd(adRepository.save(adEntity));
     }
 
