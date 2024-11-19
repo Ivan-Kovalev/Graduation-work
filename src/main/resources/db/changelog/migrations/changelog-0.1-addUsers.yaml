@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/migrations/changelog-0.1-addUsers.yaml
+  - changeSet:
+      id: 001_add_users
+      author: Flawden
+      changes:
+        - createTable:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: "id"
+                  type: "INT"
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "email"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "password"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "first_name"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "last_name"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "phone"
+                  type: "VARCHAR(20)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "role"
+                  type: "VARCHAR(50)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "image"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: true
