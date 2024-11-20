@@ -34,7 +34,6 @@ public class AuthControllerTest {
 
     @Test
     public void testLoginFailure() {
-        // Подготовка
         Login login = new Login("user", "wrongpassword");
         when(authService.login("user", "wrongpassword")).thenReturn(false);
         ResponseEntity<?> response = authController.login(login);
@@ -43,7 +42,6 @@ public class AuthControllerTest {
 
     @Test
     public void testRegisterSuccess() {
-        // Подготовка
         Register register = new Register("user", "password", "John", "Doe", "1234567890", Role.USER);
         when(authService.register(register)).thenReturn(true);
         ResponseEntity<?> response = authController.register(register);

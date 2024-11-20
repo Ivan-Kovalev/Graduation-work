@@ -2,6 +2,7 @@ package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +44,6 @@ public class AdController {
         } else {
             return new ResponseEntity<>(adService.addAdv(file, createOrUpdateAd, userDetails.getUsername()), HttpStatus.CREATED);
         }
-    }
-
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<ExtendedAd> getAdvInfo(@PathVariable Integer id) {
-        return new ResponseEntity<>(adService.getAdvInfo(id), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
