@@ -8,6 +8,12 @@ import ru.skypro.homework.model.UserEntity;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Класс, реализующий интерфейс {@link UserDetails} для предоставления информации о пользователе.
+ * Используется для аутентификации и авторизации в системе безопасности Spring Security.
+ * Этот класс оборачивает сущность пользователя {@link UserEntity} и предоставляет необходимые данные,
+ * такие как имя пользователя, пароль и роли.
+ */
 public class PersonDetails implements UserDetails {
 
     private final UserEntity user;
