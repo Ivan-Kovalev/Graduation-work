@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
+import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.service.AdService;
 
@@ -61,6 +62,11 @@ public class AdController {
         } else {
             return new ResponseEntity<>(adService.addAdv(file, createOrUpdateAd, userDetails.getUsername()), HttpStatus.CREATED);
         }
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ExtendedAd> getAdvInfo(@PathVariable Integer id) {
+        return new ResponseEntity<>(adService.getAdvInfo(id), HttpStatus.OK);
     }
 
     /**
@@ -116,7 +122,7 @@ public class AdController {
         if (userDetails == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        if (file.getSize() > 50_000) {
+        if (file.getSize() > 50_000_000) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(adService.updateAdvImage(id, file, userDetails.getUsername()));
