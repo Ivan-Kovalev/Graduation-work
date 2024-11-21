@@ -11,18 +11,28 @@ import ru.skypro.homework.util.FileService;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+/**
+ * Реализация сервиса для работы с файлами.
+ * Предоставляет функциональность для сохранения, обновления и получения файлов.
+ */
 @Component
 public class FileServiceImpl implements FileService {
 
     @Value("${image.upload.directory}")
     private String uploadDirectory;
 
+    /**
+     * Сохраняет файл в указанной директории.
+     *
+     * @param file файл для сохранения
+     * @return путь к сохраненному файлу относительно директории загрузки
+     * @throws FileSavingException если произошла ошибка при сохранении файла
+     */
     public String saveFile(MultipartFile file) {
         Path directory = Paths.get(uploadDirectory);
 
@@ -36,6 +46,14 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    /**
+     * Обновляет файл, удаляя старый и сохраняя новый.
+     *
+     * @param fileName имя старого файла, который будет удален
+     * @param newFile  новый файл для сохранения
+     * @return путь к новому файлу относительно директории загрузки
+     * @throws FileUpdatingException если произошла ошибка при удалении старого файла или сохранении нового
+     */
     public String updateFile(String fileName, MultipartFile newFile) {
         Path oldFile = Paths.get(fileName);
 

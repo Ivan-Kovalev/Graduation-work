@@ -10,6 +10,11 @@ import ru.skypro.homework.util.FileService;
 
 import java.io.FileNotFoundException;
 
+/**
+ * Контроллер для работы с изображениями предварительного просмотра объявлений.
+ * Этот контроллер предоставляет API для получения изображений по имени файла.
+ * Он использует сервис {@link FileService} для загрузки и отправки файлов.
+ */
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -19,6 +24,13 @@ public class ImageController {
 
     private final FileService fileService;
 
+    /**
+     * Загружает изображение по его имени.
+     *
+     * @param fileName имя файла изображения, который требуется загрузить.
+     * @return {@link ResponseEntity} с ресурсом изображения в теле ответа и кодом состояния {@code HttpStatus.OK},
+     * если файл найден. В противном случае — код состояния {@code HttpStatus.NOT_FOUND}.
+     */
     @GetMapping("/{fileName}")
     public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
         try {

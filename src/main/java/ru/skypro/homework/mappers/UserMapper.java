@@ -12,7 +12,7 @@ import ru.skypro.homework.model.UserEntity;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper( UserMapper.class );
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     User mapUserEntityToUser(UserEntity userEntity);
 

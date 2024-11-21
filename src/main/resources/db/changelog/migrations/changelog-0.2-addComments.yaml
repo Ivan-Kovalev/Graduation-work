@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/migrations/changelog-0.2-addAds.yaml
+  - changeSet:
+      id: 002_add_ads
+      author: Flawden
+      changes:
+        - createTable:
+            tableName: "ad_entity"
+            columns:
+              - column:
+                  name: "pk"
+                  type: "INT"
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "image"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "price"
+                  type: "INT"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "title"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "description"
+                  type: "TEXT"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "author_id"
+                  type: "INT"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 003_add_ad_foreign_key
+      author: Flawden
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: "ad_entity"
+            baseColumnNames: "author_id"
+            referencedTableName: "user_entity"
+            referencedColumnNames: "id"
+            constraintName: "fk_ad_author"

@@ -3,7 +3,6 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
@@ -25,6 +24,10 @@ import ru.skypro.homework.service.CommentService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация сервиса для работы с комментариями.
+ * Предоставляет функциональность для добавления, удаления, обновления комментариев, а также получения комментариев для объявления.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,6 +39,14 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final AdMapper adMapper;
 
+    /**
+     * Получает список комментариев для объявления.
+     * Если объявление с указанным id не найдено, выбрасывается исключение.
+     *
+     * @param id идентификатор объявления.
+     * @return объект Comments, содержащий список комментариев.
+     * @throws AdNotFoundException если объявление с указанным id не найдено.
+     */
     @Override
     public Comments getCommentsAdv(Integer id) {
         AdEntity adEntity = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException("Ошибка! Реклама с данным id не найдена"));
@@ -46,6 +57,17 @@ public class CommentServiceImpl implements CommentService {
         return new Comments(comments.size(), comments.toArray(new Comment[0]));
     }
 
+    /**
+     * Добавляет новый комментарий к объявлению.
+     * Если пользователь с указанным username не найден, выбрасывается исключение.
+     *
+     * @param id                    идентификатор объявления, к которому добавляется комментарий.
+     * @param createOrUpdateComment объект, содержащий текст нового комментария.
+     * @param username              имя пользователя, добавляющего комментарий.
+     * @return добавленный комментарий.
+     * @throws UsernameNotFoundException если пользователь с указанным username не найден.
+     * @throws AdNotFoundException       если объявление с указанным id не найдено.
+     */
     @Override
     public Comment addCommentAdv(Integer id, CreateOrUpdateComment createOrUpdateComment, String username) {
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
@@ -54,6 +76,16 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.mapCommentEntityToComment(commentRepository.save(comment));
     }
 
+    /**
+     * Удаляет комментарий по указанным id объявления и id комментария.
+     * Если комментарий не принадлежит пользователю или если он не является администратором, выбрасывается исключение.
+     *
+     * @param adId      идентификатор объявления.
+     * @param commentId идентификатор комментария, который нужно удалить.
+     * @param username  имя пользователя, пытающегося удалить комментарий.
+     * @throws CommentNotFoundException если комментарий с указанным id не найден.
+     * @throws ForbiddenActionException если пользователь не является автором комментария или администратором.
+     */
     @Override
     public void deleteCommentAdv(Integer adId, Integer commentId, String username) {
         CommentEntity comment = commentRepository.findById(adId).orElseThrow(() -> new CommentNotFoundException("Ошибка! Комментарий с указанным ID не найден"));
@@ -65,6 +97,18 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(commentId);
     }
 
+    /**
+     * Обновляет текст комментария.
+     * Если комментарий не принадлежит пользователю или если он не является администратором, выбрасывается исключение.
+     *
+     * @param adId                  идентификатор объявления, к которому относится комментарий.
+     * @param commentId             идентификатор комментария, который нужно обновить.
+     * @param createOrUpdateComment объект, содержащий новый текст комментария.
+     * @param username              имя пользователя, который пытается обновить комментарий.
+     * @return обновленный комментарий.
+     * @throws CommentNotFoundException если комментарий с указанным id не найден.
+     * @throws ForbiddenActionException если пользователь не является автором комментария или администратором.
+     */
     @Override
     public Comment updateCommentAdv(Integer adId, Integer commentId, CreateOrUpdateComment createOrUpdateComment, String username) {
         CommentEntity comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("Ошибка! Комментарий с указанным ID не найден"));
