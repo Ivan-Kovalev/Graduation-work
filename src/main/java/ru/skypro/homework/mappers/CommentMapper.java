@@ -12,7 +12,7 @@ import ru.skypro.homework.model.UserEntity;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    CommentMapper INSTANCE = Mappers.getMapper( CommentMapper.class );
+    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     @Mapping(target = "author", source = "author.id")
     Comment mapCommentEntityToComment(CommentEntity commentEntity);

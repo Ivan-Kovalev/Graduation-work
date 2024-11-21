@@ -2,7 +2,6 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
@@ -43,8 +42,9 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public Ad addAdv(MultipartFile file, CreateOrUpdateAd createOrUpdateAd, String username) throws IOException {
-        UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
+    public Ad addAdv(MultipartFile file, CreateOrUpdateAd createOrUpdateAd, String username) {
+        UserEntity user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден!"));
         String filePath = fileService.saveFile(file);
         AdEntity adEntity = AdEntity.builder()
                 .image(filePath)
@@ -53,8 +53,8 @@ public class AdServiceImpl implements AdService {
                 .description(createOrUpdateAd.getDescription())
                 .author(user)
                 .build();
-        adRepository.save(adEntity);
-        return adMapper.mapAdEntityToAd(adRepository.save(adEntity));
+        AdEntity savedEntity = adRepository.save(adEntity);
+        return adMapper.mapAdEntityToAd(savedEntity);
     }
 
     @Override
@@ -65,12 +65,18 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public void deleteAdv(Integer id, String username) {
-        AdEntity adEntity = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException("Ошибка! Реклама с данным id не найдена"));
+        AdEntity adEntity = adRepository.findById(id)
+                .orElseThrow(() -> new AdNotFoundException("Ошибка! Реклама с данным id не найдена"));
+        UserEntity user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Ошибка! Пользователь не найден"));
+
         boolean isAuthor = username.equals(adEntity.getAuthor().getEmail());
-        boolean isAdmin = adEntity.getAuthor().getRole().equals(Role.ADMIN);
+        boolean isAdmin = user.getRole().equals(Role.ADMIN);
+
         if (!isAuthor && !isAdmin) {
             throw new ForbiddenActionException("Пользователь " + username + " не имеет прав удалять чужие объявления.");
         }
+
         adRepository.deleteById(id);
     }
 

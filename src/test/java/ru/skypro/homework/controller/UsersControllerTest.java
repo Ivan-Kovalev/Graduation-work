@@ -1,6 +1,5 @@
 package ru.skypro.homework.controller;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,7 +83,6 @@ class UsersControllerTest {
 
     @Test
     void updateCurrentUserInfo_ShouldReturnOk_WhenUserIsAuthenticated() {
-        // Arrange
         when(userDetails.getUsername()).thenReturn("test@test.com");
         UpdateUser updateUser = new UpdateUser("NewFirst", "NewLast", "1234567890");
         when(userService.updateCurrentUserInfo(updateUser, "test@test.com")).thenReturn(updateUser);

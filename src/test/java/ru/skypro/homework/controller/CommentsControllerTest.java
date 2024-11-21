@@ -13,7 +13,8 @@ import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.service.CommentService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +29,7 @@ class CommentsControllerTest {
     @Test
     void getCommentsAdv_ShouldReturnOk() {
         Integer adId = 1;
-        Comments comments = new Comments(2, new Comment[] {
+        Comments comments = new Comments(2, new Comment[]{
                 new Comment(1, "image1.jpg", "John", 1623400000, "Great ad!", 1),
                 new Comment(2, "image2.jpg", "Jane", 1623400001, "Nice product", 2)
         });

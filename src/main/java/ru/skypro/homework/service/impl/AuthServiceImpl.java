@@ -3,7 +3,6 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.exception.UserIsAlreadyExistException;
@@ -29,14 +28,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean register(Register register) {
-        if(userRepository.findByEmail(register.getUsername()).isPresent()) {
+        if (userRepository.findByEmail(register.getUsername()).isPresent()) {
             throw new UserIsAlreadyExistException("User is already exist");
-        }
-        else {
+        } else {
             register.setPassword(encoder.encode(register.getPassword()));
             userRepository.save(userMapper.mapRegisterToUserEntity(register));
             return true;
         }
     }
-
 }

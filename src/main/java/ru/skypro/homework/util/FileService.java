@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 public interface FileService {
 
     String saveFile(MultipartFile file);
+
     String updateFile(String fileName, MultipartFile newFile);
+
     Resource getFile(String fileName) throws FileNotFoundException;
 }
