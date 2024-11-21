@@ -55,16 +55,16 @@ public class FileServiceImpl implements FileService {
      * @throws FileUpdatingException если произошла ошибка при удалении старого файла или сохранении нового
      */
     public String updateFile(String fileName, MultipartFile newFile) {
-        Path oldFile = Paths.get(fileName);
-
-        if (Files.exists(oldFile)) {
-            try {
-                Files.delete(oldFile);
-            } catch (IOException e) {
-                throw new FileUpdatingException("Ошибка при удалении файла");
+        if(fileName != null) {
+            Path oldFile = Paths.get(fileName);
+            if (Files.exists(oldFile)) {
+                try {
+                    Files.delete(oldFile);
+                } catch (IOException e) {
+                    throw new FileUpdatingException("Ошибка при удалении файла");
+                }
             }
         }
-
         return saveFile(newFile);
     }
 
