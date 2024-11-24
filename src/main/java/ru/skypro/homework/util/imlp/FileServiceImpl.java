@@ -25,6 +25,8 @@ public class FileServiceImpl implements FileService {
 
     @Value("${image.upload.directory}")
     private String uploadDirectory;
+    @Value("${resourceses.root}")
+    protected String resources;
 
     /**
      * Сохраняет файл в указанной директории.
@@ -34,13 +36,13 @@ public class FileServiceImpl implements FileService {
      * @throws FileSavingException если произошла ошибка при сохранении файла
      */
     public String saveFile(MultipartFile file) {
-        Path directory = Paths.get(uploadDirectory);
+        Path directory = Paths.get(resources + uploadDirectory);
 
         try {
             Files.createDirectories(directory);
             Path filePath = directory.resolve(UUID.randomUUID() + "-" + file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath);
-            return uploadDirectory.substring(18) + "/" + filePath.getFileName();
+            return uploadDirectory + "/" + filePath.getFileName();
         } catch (IOException e) {
             throw new FileSavingException("Ошибка при сохранении файла");
         }
@@ -55,7 +57,7 @@ public class FileServiceImpl implements FileService {
      * @throws FileUpdatingException если произошла ошибка при удалении старого файла или сохранении нового
      */
     public String updateFile(String fileName, MultipartFile newFile) {
-        if(fileName != null) {
+        if (fileName != null) {
             Path oldFile = Paths.get(fileName);
             if (Files.exists(oldFile)) {
                 try {
@@ -69,7 +71,7 @@ public class FileServiceImpl implements FileService {
     }
 
     public Resource getFile(String fileName) throws FileNotFoundException {
-        Path filePath = Paths.get(uploadDirectory, fileName);
+        Path filePath = Paths.get(resources + uploadDirectory, fileName);
 
         Resource resource = new FileSystemResource(filePath);
         if (!resource.exists()) {

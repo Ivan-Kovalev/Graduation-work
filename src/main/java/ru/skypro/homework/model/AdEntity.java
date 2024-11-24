@@ -13,6 +13,7 @@ import java.util.List;
 @ToString
 @Entity
 @Builder
+@Table(name = "ad_entity")
 public class AdEntity {
 
     @Id
