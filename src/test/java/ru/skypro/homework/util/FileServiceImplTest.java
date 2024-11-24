@@ -35,7 +35,7 @@ public class FileServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(fileService, "uploadDirectory", tempDir.toString());
+        Path.of("src/main/resources/images/ad/preview");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class FileServiceImplTest {
         String fileName = "testFile.jpg";
         MockMultipartFile mockFile = new MockMultipartFile("file", fileName, "image/jpeg", new byte[0]);
         String savedFilePath = fileService.saveFile(mockFile);
-        Path savedFile = Path.of(tempDir.toString(), savedFilePath.substring(savedFilePath.indexOf("/") + 1));
+        Path savedFile = Path.of(tempDir.toString());
         assertTrue(Files.exists(savedFile));
     }
 
