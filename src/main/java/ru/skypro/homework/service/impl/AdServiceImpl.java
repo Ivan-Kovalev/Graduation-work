@@ -173,7 +173,7 @@ public class AdServiceImpl implements AdService {
      * @throws IOException              если произошла ошибка при обработке файла.
      */
     @Override
-    public byte[] updateAdvImage(Integer id, MultipartFile file, String username) throws IOException {
+    public byte[] updateAdvImage(Integer id, MultipartFile file, String username) throws IOException, ForbiddenActionException {
         AdEntity adEntity = adRepository.findById(id)
                 .orElseThrow(() -> new AdNotFoundException("Реклама с id " + id + " не найдена"));
         boolean isAuthor = username.equals(adEntity.getAuthor().getEmail());
