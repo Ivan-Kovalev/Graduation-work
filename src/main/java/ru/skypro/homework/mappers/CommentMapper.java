@@ -9,20 +9,20 @@ import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.model.CommentEntity;
 import ru.skypro.homework.model.UserEntity;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper( UserMapper.class );
+    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
-    @Mapping(target = "author", expression = "java(commentEntity.getAuthor().getId())")
-    Comment mapCommentEntityToComment (CommentEntity commentEntity);
+    @Mapping(target = "author", source = "author.id")
+    Comment mapCommentEntityToComment(CommentEntity commentEntity);
 
-    @Mapping(source = "author", target = "author", qualifiedByName = "mapIntegerToUserEntity")
+    @Mapping(source = "author", target = "author.id")
     CommentEntity mapCommentToCommentEntity(Comment comment);
 
     CommentEntity mapCreateOrUpdateCommentToCommentEntity(CreateOrUpdateComment createOrUpdateComment);
 
-    CreateOrUpdateComment mapCreateOrUpdateCommentToCommentEntity(CommentEntity commentEntity);
+    CreateOrUpdateComment mapCommentEntityToCreateOrUpdateComment(CommentEntity commentEntity);
 
     @Named("mapIntegerToUserEntity")
     default UserEntity map(Integer value) {

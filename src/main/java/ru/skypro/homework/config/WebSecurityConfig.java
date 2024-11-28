@@ -1,28 +1,41 @@
 package ru.skypro.homework.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.skypro.homework.dto.Role;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.skypro.homework.repository.UserRepository;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+/**
+ * Конфигурация безопасности для приложения.
+ * Настроены параметры аутентификации и авторизации для различных URL-адресов.
+ * Этот класс обеспечивает:
+ * Настройку аутентификации с использованием {@link DaoAuthenticationProvider},
+ * который работает с {@link UserDetailsService} и {@link PasswordEncoder} для проверки данных пользователя.
+ * Обеспечение доступа к ресурсам Swagger и публичным эндпоинтам (например, /login и /register) без аутентификации.
+ * Настройку CORS и отключение CSRF для упрощения конфигурации API.
+ * Параметры авторизации для ограниченных ресурсов: доступ только для аутентифицированных пользователей для некоторых URL.
+ */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final UserRepository userRepository;
@@ -33,14 +46,16 @@ public class WebSecurityConfig {
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/register"
+            "/register",
+            "/images/ad/preview/**"
     };
 
-    public WebSecurityConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-
+    /**
+     * Конфигурация {@link DaoAuthenticationProvider} для аутентификации пользователей.
+     * Используется {@link UserDetailsService} и {@link PasswordEncoder} для проверки данных пользователя.
+     *
+     * @return настроенный {@link DaoAuthenticationProvider}.
+     */
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -49,15 +64,39 @@ public class WebSecurityConfig {
         return provider;
     }
 
+    /**
+     * Конфигурация {@link UserDetailsService} для работы с пользователями через {@link UserRepository}.
+     *
+     * @return настроенный {@link UserDetailsService}, который использует {@link UserRepository}.
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return new PersonDetailService(userRepository);
     }
 
     @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedMethods("*");
+            }
+        };
+    }
+
+    /**
+     * Конфигурация фильтрации запросов с использованием {@link HttpSecurity}.
+     * Настроены правила доступа для различных URL-адресов, а также параметры CORS и отключение CSRF.
+     *
+     * @param http {@link HttpSecurity}, для настройки фильтров безопасности.
+     * @return настроенная {@link SecurityFilterChain}.
+     * @throws Exception если произошла ошибка настройки безопасности.
+     */
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorization ->
                                 authorization
@@ -70,7 +109,11 @@ public class WebSecurityConfig {
                 .httpBasic(withDefaults());
         return http.build();
     }
-
+    /**
+     * Конфигурация {@link PasswordEncoder} с использованием алгоритма BCrypt.
+     *
+     * @return настроенный {@link PasswordEncoder} для шифрования паролей.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(16);

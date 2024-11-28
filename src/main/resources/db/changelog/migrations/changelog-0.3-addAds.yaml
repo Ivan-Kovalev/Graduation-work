@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/migrations/changelog-0.3-addComments.yaml
+  - changeSet:
+      id: 004_add_comments
+      author: Flawden
+      changes:
+        - createTable:
+            tableName: "comment_entity"
+            columns:
+              - column:
+                  name: "pk"
+                  type: "INT"
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "author_image"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "author_first_name"
+                  type: "VARCHAR(255)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "created_at"
+                  type: "INT"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "text"
+                  type: "TEXT"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "ad_id"
+                  type: "INT"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "user_id"
+                  type: "INT"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 005_add_comment_ad_foreign_key
+      author: Flawden
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: "comment_entity"
+            baseColumnNames: "ad_id"
+            referencedTableName: "ad_entity"
+            referencedColumnNames: "pk"
+            constraintName: "fk_comment_ad"
+
+  - changeSet:
+      id: 006_add_comment_user_foreign_key
+      author: Flawden
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: "comment_entity"
+            baseColumnNames: "user_id"
+            referencedTableName: "user_entity"
+            referencedColumnNames: "id"
+            constraintName: "fk_comment_user"
